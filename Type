@@ -1,12 +1,9 @@
-from pyrogram import Client, filters
+from pyrogram import filters
 import asyncio
+from heroku.modules import register # Попробуй импорт из твоего loader или utils
 
-# Используем client вместо app, так как в модулях он передается аргументом
-# В декораторах юзерботов часто используется 'app' или 'bot', 
-# но если ты загружаешь модуль извне, лучше использовать объект клиента, 
-# который уже инициализирован в системе.
-# Если бот использует библиотеку для модулей, попробуй найти, как она регистрирует команды.
-
+# Регистрируем команду через функцию, которую ждет твой loader.py
+@register(outgoing=True, commands=["type"])
 async def type_handler(client, message):
     if len(message.command) > 1:
         text_to_type = " ".join(message.command[1:])
