@@ -1,29 +1,28 @@
-from pyrogram import filters
+from pyrogram import Client, filters
+import asyncio
 
-# Эта функция слушает все сообщения, которые начинаются на .type
-@app.on_message(filters.command("type", prefixes=".") & filters.me)
+# Используем client вместо app, так как в модулях он передается аргументом
+# В декораторах юзерботов часто используется 'app' или 'bot', 
+# но если ты загружаешь модуль извне, лучше использовать объект клиента, 
+# который уже инициализирован в системе.
+# Если бот использует библиотеку для модулей, попробуй найти, как она регистрирует команды.
+
 async def type_handler(client, message):
-    # Получаем текст, который идет после .type
     if len(message.command) > 1:
         text_to_type = " ".join(message.command[1:])
-        
-        # Удаляем исходное сообщение с командой, чтобы не мозолило глаза
         await message.delete()
         
-        # Запускаем функцию печати
         current_text = ""
         msg = await client.send_message(message.chat.id, "...")
         
         for char in text_to_type:
             current_text += char
             try:
-                # 0.05 сек — оптимальная скорость для Telegram
                 await msg.edit(f"<code>{current_text}▋</code>")
                 await asyncio.sleep(0.05)
             except Exception:
-                await asyncio.sleep(1) # Ждем, если API ругается
+                await asyncio.sleep(1)
         
-        # Финальное сообщение без курсора
         await msg.edit(f"<code>{current_text}</code>")
     else:
         await message.edit("Используй: .type <текст>")
