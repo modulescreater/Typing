@@ -1,8 +1,9 @@
-from .. import loader, utils  # Импорты для Hikka-структуры
+import asyncio
+from .. import loader, utils
 
 @loader.tds
 class TypeMod(loader.Module):
-    """Модуль для печатающего текста"""
+    """Модуль для печатающегося текста"""
     strings = {"name": "Type"}
 
     def __init__(self):
